@@ -1,54 +1,28 @@
-vim.notify("Hello world!")
+-- Load the things
+require("options")
+require("keymaps")
+require("autocmds")
 
--- Leader key
-vim.g.mapleader = " "
-
--- Very useful options
--- clipboard
-vim.opt.clipboard = "unnamedplus"
-
--- Line numbers
-vim.opt.rnu = true
-vim.opt.nu = true
-vim.opt.scrolloff = 15
-
--- Tabs
-vim.opt.expandtab = true
-vim.opt.tabstop = 4
-vim.opt.softtabstop = 4
-vim.opt.shiftwidth = 4
-
--- Wrap
-vim.opt.wrap = false
-vim.opt.breakindent = true
-
--- Undo files
-vim.opt.undofile = true
-
--- Searching
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-
--- Update time
-vim.opt.updatetime = 100
-vim.opt.timeout = true
-vim.opt.timeoutlen = 300
-
--- Cool colors
-vim.opt.cursorline = true
-vim.opt.colorcolumn = { 80, 81 }
-
--- -- Required for formatting I think, can't be fucked to check
--- vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-
--- Set whitespace characters
-vim.opt.listchars:append({
-	multispace = "·",
-	lead = "·",
-	trail = "·",
-	nbsp = "·",
-	eol = "↵",
+require("nixCatsUtils").setup({
+    non_nix_value = true,
 })
-vim.opt.list = true
+
+local pluginList = nil
+local nixLazyPath = nil
+if require("nixCatsUtils").isNixCats then
+    local allPlugins = require("nixCats").pawsible.allPlugins
+    pluginList = require("nixCatsUtils.lazyCat").mergePluginTables(allPlugins.start, allPlugins.opt)
+
+    nixLazyPath = allPlugins.start[ [[lazy.nvim]] ]
+
+    pluginList[ [[Comment.nvim]] ] = ""
+    pluginList[ [[LuaSnip]] ] = ""
+    pluginList[ [[catppuccin]] ] = ""
+end
+
+local lazyOptions = {
+    lockfile = vim.fn.stdpath("config") .. "/lazy-lock.json",
+}
+
+require("nixCatsUtils.lazyCat").setup(pluginList, nixLazyPath, "plugins", lazyOptions)
+-- require("nixCatsUtils.lazyCat").setup(pluginList, nixLazyPath, {}, lazyOptions)

@@ -25,9 +25,9 @@
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
     nixCats.inputs.nixpkgs.follows = "nixpkgs";
 
-    # neovim-nightly-overlay = {
-    #   url = "github:nix-community/neovim-nightly-overlay";
-    # };
+    neovim-nightly-overlay = {
+      url = "github:nix-community/neovim-nightly-overlay";
+    };
 
     # see :help nixCats.flake.inputs
     # If you want your plugin to be loaded by the standard overlay,
@@ -107,18 +107,116 @@
       # this includes LSPs
       lspsAndRuntimeDeps = {
         general = with pkgs; [
+          universal-ctags
+          tree-sitter
+          ripgrep
+          fd
+          gcc
+          nix-doc
+
+          # lsps
+          lua-language-server
+          nodePackages_latest.typescript-language-server
+          emmet-language-server
+          tailwindcss-language-server
+          llvmPackages_18.clang-unwrapped
+          nil
+          marksman
+          pyright
+          zls
+          rust-analyzer
+
+          # Formatters
+          prettierd
+          stylua
+          black
+          rustfmt
+          checkstyle
+          languagetool-rust
         ];
       };
 
       # This is for plugins that will load at startup without using packadd:
       startupPlugins = {
         customPlugins = with pkgs.nixCatsBuilds; [ ];
-        gitPlugins = with pkgs.neovimPlugins; [ ];
-        general = with pkgs.vimPlugins; [ ];
+        lazy = with pkgs.vimPlugins; [
+          lazy-nvim
+        ];
+        general = {
+          gitPlugins = with pkgs.neovimPlugins; [
+            # hlargs
+          ];
+          vimPlugins = with pkgs.vimPlugins; [
+              # completions
+              nvim-cmp
+              cmp_luasnip
+              luasnip
+              friendly-snippets
+              cmp-path
+              cmp-buffer
+              cmp-nvim-lua
+              cmp-nvim-lsp
+              cmp-nvim-lsp-signature-help
+
+              # telescope
+              plenary-nvim
+              telescope-nvim
+              telescope-undo-nvim
+              telescope-ui-select-nvim
+              telescope-fzf-native-nvim
+              todo-comments-nvim
+              trouble-nvim
+
+              # Formatting
+              conform-nvim
+
+              # lsp
+              nvim-lspconfig
+              fidget-nvim
+              neodev-nvim
+              rustaceanvim
+              none-ls-nvim
+
+              # treesitter
+              nvim-treesitter-textobjects
+              nvim-treesitter.withAllGrammars
+
+              # ui
+              lualine-nvim
+              nvim-web-devicons
+              gitsigns-nvim
+              nui-nvim
+              neo-tree-nvim
+              undotree
+
+              # Color scheme
+              onedark-nvim
+              catppuccin-nvim
+              tokyonight-nvim
+
+              #misc
+              vimtex
+              comment-nvim
+              vim-sleuth
+              indent-blankline-nvim
+              markdown-preview-nvim
+              image-nvim
+              autoclose-nvim
+            ];
+        };
+
+        themer = with pkgs.vimPlugins;
+          (builtins.getAttr categories.colorscheme {
+              "onedark" = onedark-nvim;
+              "catppuccin" = catppuccin-nvim;
+              "catppuccin-mocha" = catppuccin-nvim;
+              "tokyonight" = tokyonight-nvim;
+            }
+          );
       };
 
-      # not loaded automatically at startup.
-      # use with packadd and an autocommand in config to achieve lazy loading
+# not loaded automatically at startup.
+# use with packadd and an autocommand in config to achieve lazy loading
       optionalPlugins = {
         customPlugins = with pkgs.nixCatsBuilds; [ ];
         gitPlugins = with pkgs.neovimPlugins; [ ];
@@ -189,25 +287,20 @@
           aliases = [ "nc" ];
           # caution: this option must be the same for all packages.
           # or at least, all packages that are to be installed simultaneously.
-          # neovim-unwrapped = inputs.neovim-nightly-overlay.packages.${pkgs.system}.neovim;
+          neovim-unwrapped = inputs.neovim-nightly-overlay.packages.${pkgs.system}.neovim;
         };
         # and a set of categories that you want
         # (and other information to pass to lua)
         categories = {
+          lazy = true;
           general = true;
           gitPlugins = true;
           customPlugins = true;
           generalBuildInputs = true;
-          test = true;
-          example = {
-            youCan = "add more than just booleans";
-            toThisSet = [
-              "and the contents of this categories set"
-              "will be accessible to your lua with"
-              "nixCats('path.to.value')"
-              "see :help nixCats"
-            ];
-          };
+
+          # colors
+          themer = true;
+          colorscheme = "catppuccin";
         };
       };
     };
