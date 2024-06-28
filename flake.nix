@@ -25,6 +25,9 @@
     nixCats.url = "github:BirdeeHub/nixCats-nvim";
     nixCats.inputs.nixpkgs.follows = "nixpkgs";
 
+    zls.url = "github:zigtools/zls";
+    zls.inputs.nixpkgs.follows = "nixpkgs";
+
     neovim-nightly-overlay = {
       url = "github:nix-community/neovim-nightly-overlay";
     };
@@ -123,7 +126,7 @@
           nil
           marksman
           pyright
-          zls
+          inputs.zls
           rust-analyzer
 
           # Formatters

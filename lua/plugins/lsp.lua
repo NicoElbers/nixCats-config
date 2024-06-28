@@ -27,75 +27,81 @@ return {
             "zig",
         },
         config = function()
-            vim.defer_fn(function()
-                local capabilities = vim.lsp.protocol.make_client_capabilities()
-                capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
-                capabilities.document_formatting = false
+            local capabilities = vim.lsp.protocol.make_client_capabilities()
+            capabilities = require("cmp_nvim_lsp").default_capabilities(capabilities)
+            capabilities.document_formatting = false
 
-                local lspconfig = require("lspconfig")
+            local lspconfig = require("lspconfig")
 
-                -- c/ c++
-                lspconfig.clangd.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            -- c/ c++
+            lspconfig.clangd.setup({
+                on_attach = utils.on_attach,
+                cmd = { "clangd" },
+                capabilities = capabilities,
+            })
 
-                -- Lua
-                lspconfig.lua_ls.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            -- Lua
+            lspconfig.lua_ls.setup({
+                on_attach = utils.on_attach,
+                cmd = { "lua-language-server" },
+                capabilities = capabilities,
+            })
 
-                -- Markdown
-                lspconfig.marksman.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            -- Markdown
+            lspconfig.marksman.setup({
+                on_attach = utils.on_attach,
+                cmd = { "marksman" },
+                capabilities = capabilities,
+            })
 
-                -- Nix
-                lspconfig.nil_ls.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            -- Nix
+            lspconfig.nil_ls.setup({
+                on_attach = utils.on_attach,
+                cmd = { "nil" },
+                capabilities = capabilities,
+            })
 
-                -- Python
-                lspconfig.pyright.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            -- Python
+            lspconfig.pyright.setup({
+                on_attach = utils.on_attach,
+                cmd = { "pyright-langserver" },
+                capabilities = capabilities,
+            })
 
-                -- Web
-                lspconfig.tsserver.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            -- Web
+            lspconfig.tsserver.setup({
+                on_attach = utils.on_attach,
+                capabilities = capabilities,
+            })
 
-                lspconfig.emmet_language_server.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            lspconfig.emmet_language_server.setup({
+                on_attach = utils.on_attach,
+                cmd = { "emmet-language-server" },
+                capabilities = capabilities,
+            })
 
-                lspconfig.tailwindcss.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = capabilities,
-                })
+            lspconfig.tailwindcss.setup({
+                on_attach = utils.on_attach,
+                cmd = { "tailwindcss-language-server" },
+                capabilities = capabilities,
+            })
 
-                local cssls_capabilities = capabilities
-                cssls_capabilities.textDocument.completion.completionItem.snippetSupport = true
-                lspconfig.cssls.setup({
-                    on_attach = utils.on_attach,
-                    capabilities = cssls_capabilities,
-                })
+            -- local cssls_capabilities = capabilities
+            -- cssls_capabilities.textDocument.completion.completionItem.snippetSupport = true
+            -- lspconfig.cssls.setup({
+            --     on_attach = utils.on_attach,
+            --     capabilities = cssls_capabilities,
+            -- })
 
-                -- Zig
-                lspconfig.zls.setup({
-                    capabilities = capabilities,
-                    on_attach = utils.on_attach,
-                    settings = {
-                        warn_style = true,
-                    },
-                })
-            end, 0)
+            -- Zig
+            lspconfig.zls.setup({
+                capabilities = capabilities,
+                cmd = { "zls" },
+                on_attach = utils.on_attach,
+                settings = {
+                    warn_style = true,
+                },
+            })
         end,
     },
     -- Rust
