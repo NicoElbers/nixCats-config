@@ -110,7 +110,8 @@
           languagetool-rust
 
           # Clipboard
-          xclip
+          # TODO: Make it so it installs the right clipboard
+          wl-clipboard-rs
         ];
       };
 
