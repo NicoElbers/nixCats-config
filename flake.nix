@@ -108,6 +108,9 @@
           rustfmt
           checkstyle
           languagetool-rust
+
+          # Clipboard
+          xclip
         ];
       };
 
